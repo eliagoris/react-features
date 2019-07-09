@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 
 const NoteApp = () => {
-  const [notes, setNotes] = useState([])
+  const defaultNotes = JSON.parse(localStorage.getItem('notes')) || []
+  const [notes, setNotes] = useState(defaultNotes)
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
+
+  useEffect(() => {
+    localStorage.setItem('notes', JSON.stringify(notes))
+  })
 
   const handleAddNote = e => {
     e.preventDefault()
@@ -46,27 +51,32 @@ const NoteApp = () => {
   )
 }
 
-// const App = ({ initialCount, initialText }) => {
-//   const [count, setCount] = useState(initialCount)
-//   const [text, setText] = useState(initialText)
+const App = ({ initialCount, initialText }) => {
+  const [count, setCount] = useState(initialCount)
+  const [text, setText] = useState(initialText)
 
-//   return (
-//     <div>
-//       <p>
-//         The current {text} is {count}
-//       </p>
-//       <button onClick={() => setCount(count - 1)}>-1</button>
-//       <button onClick={() => setCount(0)}>reset</button>
-//       <button onClick={() => setCount(count + 1)}>+1</button>
+  useEffect(() => {
+    console.log('useEffect ran')
+    document.title = count
+  })
 
-//       <input value={text} onChange={e => setText(e.target.value)} />
-//     </div>
-//   )
-// }
+  return (
+    <div>
+      <p>
+        The current {text} is {count}
+      </p>
+      <button onClick={() => setCount(count - 1)}>-1</button>
+      <button onClick={() => setCount(0)}>reset</button>
+      <button onClick={() => setCount(count + 1)}>+1</button>
 
-// App.defaultProps = {
-//   initialCount: 0,
-//   initialText: 'count',
-// }
+      <input value={text} onChange={e => setText(e.target.value)} />
+    </div>
+  )
+}
+
+App.defaultProps = {
+  initialCount: 0,
+  initialText: 'count',
+}
 
 ReactDOM.render(<NoteApp />, document.getElementById('root'))
