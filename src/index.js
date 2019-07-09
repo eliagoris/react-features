@@ -2,14 +2,21 @@ import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 
 const NoteApp = () => {
-  const defaultNotes = JSON.parse(localStorage.getItem('notes')) || []
-  const [notes, setNotes] = useState(defaultNotes)
+  const [notes, setNotes] = useState([])
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
 
   useEffect(() => {
+    const defaultNotes = JSON.parse(localStorage.getItem('notes'))
+
+    if (defaultNotes) {
+      setNotes(defaultNotes)
+    }
+  }, [])
+
+  useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes))
-  })
+  }, [notes])
 
   const handleAddNote = e => {
     e.preventDefault()
@@ -56,9 +63,13 @@ const App = ({ initialCount, initialText }) => {
   const [text, setText] = useState(initialText)
 
   useEffect(() => {
+    console.log('useEffect only once')
+  }, [])
+
+  useEffect(() => {
     console.log('useEffect ran')
     document.title = count
-  })
+  }, [count])
 
   return (
     <div>
